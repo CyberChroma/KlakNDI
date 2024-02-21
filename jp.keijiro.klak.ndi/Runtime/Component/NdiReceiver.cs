@@ -8,6 +8,8 @@ namespace Klak.Ndi {
 [ExecuteInEditMode]
 public sealed partial class NdiReceiver : MonoBehaviour
 {
+    public static bool isConnected = false;
+
     #region Receiver objects
 
     Interop.Recv _recv;
@@ -39,11 +41,17 @@ public sealed partial class NdiReceiver : MonoBehaviour
     RenderTexture TryReceiveFrame()
     {
         PrepareReceiverObjects();
-        if (_recv == null) return null;
+        if (_recv == null) {
+            isConnected = false;
+            return null;
+        }
 
         // Video frame capturing
         var frameOrNull = RecvHelper.TryCaptureVideoFrame(_recv);
-        if (frameOrNull == null) return null;
+        if (frameOrNull == null) {
+            isConnected = false;
+            return null;
+        }
         var frame = (Interop.VideoFrame)frameOrNull;
 
         // Pixel format conversion
@@ -58,7 +66,7 @@ public sealed partial class NdiReceiver : MonoBehaviour
 
         // Video frame release
         _recv.FreeVideoFrame(frame);
-
+        isConnected = true;
         return rt;
     }
 

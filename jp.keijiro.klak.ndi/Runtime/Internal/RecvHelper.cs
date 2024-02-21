@@ -1,4 +1,6 @@
 using IntPtr = System.IntPtr;
+using Mirror;
+using System.Text.RegularExpressions;
 
 namespace Klak.Ndi {
 
@@ -7,8 +9,17 @@ static class RecvHelper
 {
     public static Interop.Source? FindSource(string sourceName)
     {
-        foreach (var source in SharedInstance.Find.CurrentSources)
-            if (source.NdiName == sourceName) return source;
+        foreach (var source in SharedInstance.Find.CurrentSources) {
+            string urlAddress;
+            if (Regex.Match(source.UrlAddress, @":\d{4}$").Success) {
+                urlAddress = source.UrlAddress.Remove(source.UrlAddress.Length - 5);
+            } else {
+                urlAddress = source.UrlAddress;
+            }
+            if (source.NdiName.Contains(sourceName) && urlAddress == NetworkManager.singleton.networkAddress) {
+                return source;
+            }
+        }
         return null;
     }
 

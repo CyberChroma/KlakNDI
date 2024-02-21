@@ -1,5 +1,7 @@
 using IntPtr = System.IntPtr;
+#if MIRROR
 using Mirror;
+#endif
 using System.Text.RegularExpressions;
 
 namespace Klak.Ndi {
@@ -16,7 +18,12 @@ static class RecvHelper
             } else {
                 urlAddress = source.UrlAddress;
             }
+#if MIRROR
             if (source.NdiName.Contains(sourceName) && urlAddress == NetworkManager.singleton.networkAddress) {
+                return source;
+            }
+#endif
+            if (source.NdiName.Contains(sourceName)) {
                 return source;
             }
         }

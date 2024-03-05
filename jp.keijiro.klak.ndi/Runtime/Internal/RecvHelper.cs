@@ -11,21 +11,28 @@ static class RecvHelper
 {
     public static Interop.Source? FindSource(string sourceName)
     {
-        foreach (var source in SharedInstance.Find.CurrentSources) {
+        foreach (var source in SharedInstance.Find.CurrentSources)
+        {
             string urlAddress;
-            if (Regex.Match(source.UrlAddress, @":\d{4}$").Success) {
+            if (Regex.Match(source.UrlAddress, @":\d{4}$").Success)
+            {
                 urlAddress = source.UrlAddress.Remove(source.UrlAddress.Length - 5);
-            } else {
+            }
+            else
+            {
                 urlAddress = source.UrlAddress;
             }
 #if MIRROR
-            if (source.NdiName.Contains(sourceName) && urlAddress == NetworkManager.singleton.networkAddress) {
+            if (source.NdiName.Contains(sourceName) && urlAddress == NetworkManager.singleton.networkAddress)
+            {
+                return source;
+            }
+#else
+            if (source.NdiName.Contains(sourceName))
+            {
                 return source;
             }
 #endif
-            if (source.NdiName.Contains(sourceName)) {
-                return source;
-            }
         }
         return null;
     }

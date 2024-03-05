@@ -1,6 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
+#if MIRROR
+using Mirror;
+#endif
 
 namespace Klak.Ndi.Interop {
 
@@ -21,7 +24,20 @@ public class Find : SafeHandleZeroOrMinusOneIsInvalid
     #region Public methods
 
     public static Find Create()
-      => _Create(new Settings { ShowLocalSources = true });
+    {
+#if MIRROR
+        string savedIP = NetworkManager.singleton.networkAddress;
+        IntPtr extraIPPtr = Marshal.StringToHGlobalAnsi(savedIP);
+        Settings settings = new Settings { ShowLocalSources = true, ExtraIPs = extraIPPtr };
+#else
+        Settings settings = new Settings { ShowLocalSources = true };
+#endif
+        Find findInstance = _Create(settings);
+#if MIRROR
+        Marshal.FreeHGlobal(extraIPPtr);
+#endif
+        return findInstance;
+    }
 
     public Span<Source> CurrentSources
       => GetCurrentSourcesAsSpan();

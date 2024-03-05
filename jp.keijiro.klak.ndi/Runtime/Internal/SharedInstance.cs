@@ -1,3 +1,5 @@
+using Mirror;
+
 namespace Klak.Ndi {
 
 // A wrangler class managing singleton-like shared object instances
@@ -7,7 +9,7 @@ static class SharedInstance
 
     // NDI find object
     static public Interop.Find Find
-      => _find ?? InitializeFind();
+      => _find != null ? RefreshFind() : InitializeFind();
 
     // NDI send object for the game view
     static public Interop.Send GameViewSend
@@ -20,12 +22,25 @@ static class SharedInstance
 
     #region Shared object implementation
 
+    static string lastIP;
+
     static Interop.Find _find;
 
     static Interop.Find InitializeFind()
     {
         _find = Interop.Find.Create();
         SetFinalizer();
+        lastIP = NetworkManager.singleton.networkAddress;
+        return _find;
+    }
+
+    static Interop.Find RefreshFind()
+    {
+        if (lastIP != NetworkManager.singleton.networkAddress)
+        {
+            _find = Interop.Find.Create();
+            lastIP = NetworkManager.singleton.networkAddress;
+        }
         return _find;
     }
 

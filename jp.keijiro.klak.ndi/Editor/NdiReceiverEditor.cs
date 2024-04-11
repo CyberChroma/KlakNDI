@@ -22,6 +22,9 @@ sealed class NdiReceiverEditor : UnityEditor.Editor
     AutoProperty _targetRenderer;
     AutoProperty _targetMaterialProperty;
 
+    SerializedProperty _rgbConversionMaterialProp;
+    SerializedProperty _maskConversionMaterialProp;
+    SerializedProperty _maskRenderTextureProp;
     #pragma warning restore
 
     // NDI name dropdown
@@ -51,7 +54,13 @@ sealed class NdiReceiverEditor : UnityEditor.Editor
         serializedObject.ApplyModifiedProperties();
     }
 
-    void OnEnable() => AutoProperty.Scan(this);
+    void OnEnable() {
+        AutoProperty.Scan(this);
+
+        _rgbConversionMaterialProp = serializedObject.FindProperty("_rgbConversionMaterial");
+        _maskConversionMaterialProp = serializedObject.FindProperty("_maskConversionMaterial");
+        _maskRenderTextureProp = serializedObject.FindProperty("maskRenderTexture");
+    }
 
     public override void OnInspectorGUI()
     {
@@ -89,6 +98,10 @@ sealed class NdiReceiverEditor : UnityEditor.Editor
         }
 
         EditorGUI.indentLevel--;
+
+        EditorGUILayout.PropertyField(_rgbConversionMaterialProp, new GUIContent("RGB Conversion Material"));
+        EditorGUILayout.PropertyField(_maskConversionMaterialProp, new GUIContent("Mask Conversion Material"));
+        EditorGUILayout.PropertyField(_maskRenderTextureProp, new GUIContent("Mask Render Texture"));
 
         serializedObject.ApplyModifiedProperties();
     }

@@ -1,7 +1,8 @@
 {
     "name": "Klak.Ndi.Editor",
+    "rootNamespace": "",
     "references": [
-        "GUID:b59f669f136310547b59ad72df53b42f"
+        "GUID:08ddbfead17d1f048a2a2bb40d7cc1e2"
     ],
     "includePlatforms": [
         "Editor"

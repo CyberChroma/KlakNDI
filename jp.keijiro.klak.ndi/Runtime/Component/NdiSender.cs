@@ -229,4 +229,4 @@ public sealed partial class NdiSender : MonoBehaviour
     #endregion
 }
 
-} // namespace Klak.Ndi
+}  // namespace Klak.Ndi

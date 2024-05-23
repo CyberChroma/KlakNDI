@@ -1,5 +1,4 @@
-﻿using Unity.Collections.LowLevel.Unsafe;
-using UnityEngine;
+﻿using UnityEngine;
 using IntPtr = System.IntPtr;
 using Marshal = System.Runtime.InteropServices.Marshal;
 using UnityEngine.Rendering;
@@ -10,6 +9,7 @@ namespace Klak.Ndi {
 public sealed partial class NdiReceiver : MonoBehaviour
 {
     public static bool isConnected = false;
+    public static long timecode = 0;
 
     #region Receiver objects
 
@@ -76,6 +76,8 @@ public sealed partial class NdiReceiver : MonoBehaviour
 
         UpdateRenderPipeline((uint)frame.Width, (uint)frame.Height, false, rt.GetNativeTexturePtr());
         Graphics.ExecuteCommandBuffer(_blitCommandBuffer);
+
+        timecode = frame.Timecode;
 
         // Video frame release
         _recv.FreeVideoFrame(frame);

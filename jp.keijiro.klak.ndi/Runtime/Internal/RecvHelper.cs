@@ -22,7 +22,7 @@ static class RecvHelper
             {
                 urlAddress = source.UrlAddress;
             }
-#if MIRROR
+#if MIRROR && FINGERWORKS_CLIENT
             if (source.NdiName.Contains(sourceName) && urlAddress == NetworkManager.singleton.networkAddress)
             {
                 return source;

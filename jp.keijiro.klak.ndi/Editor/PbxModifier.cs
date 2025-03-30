@@ -58,8 +58,7 @@ public class PbxModifier
         // LAN usage description
         {
             var key = "NSLocalNetworkUsageDescription";
-            var desc = "NDI requires device discovery capability " +
-                       "on the networks you use.";
+            var desc = "FingerWorks uses the local network to discover and receive NDI video feeds from other devices on the same network.";
             if (!root.values.ContainsKey(key)) root.SetString(key, desc);
         }
 
